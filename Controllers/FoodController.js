@@ -5,8 +5,6 @@ import fs from 'fs'
 //add food item
 const Addfood = async(req,res)=>{
 
-    //creating variable of the image of its name
-
     let image_filename =`${req.file.filename}`;
     const food = new foodModel({
         name : req.body.name,
@@ -24,5 +22,30 @@ try{
 }
 
 }
+// viewing All food list
+const listFood =async(req,res)=>{
+   try{
+        const foods = await foodModel.find({});
+        res.json({success:true,data:foods})
+   }catch(error){
+    console.log(error);
+    res.json({success:false,message:"error"}) 
+    
+   }  
+}
+//remove food items
+const removeFooditems =async (req,res)=>{
+    try{
+        const   food=await foodModel.findById(req.body.id)
+        //for removing the image
+        fs.unlink(`Uploads/${food.image}`,()=>{})
+        await foodModel.findByIdAndDelete(req.body.id)
+        res.json({success:true,message:"Food Removed"})
+    }catch(error){
+        console.log(error);
+        res.json({success:false,message:"error"})
+        
+    }
+}
 
-export  {Addfood} 
+export  {Addfood,listFood,removeFooditems} 
