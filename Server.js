@@ -1,6 +1,7 @@
 import express from "express"
 import cors from "cors"
 import { ConnectDb } from "./Config/Db.js"
+import foodRouter from "./Routes/Foodroute.js"
 
 
 
@@ -13,6 +14,9 @@ const Port = 4000
 
  //db-Connection
 ConnectDb()
+
+//API End Point
+app.use("/api/food",foodRouter)
 
  app.get("/",(req,res)=>{
         res.send("API Working")
