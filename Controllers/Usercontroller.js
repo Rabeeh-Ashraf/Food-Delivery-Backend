@@ -15,9 +15,16 @@ const loginUser = async (req, res) => {
     if(!isMatch){
      return res.json({success:false,message:"Invalid credentials"})
     }
+    const token = createtoken(user._id);
+    res.json({success:true,token})
   } catch (error) {
     res.json({success:false,message:"error"})
   }
+};
+
+ //generate jwd token
+ const createtoken = (id) => {
+  return jwt.sign({ id }, process.env.JWT_SECRET);
 };
 
 //Register User
@@ -57,10 +64,7 @@ const registerUser = async (req, res) => {
       password: hashedPassword,
     });
     const user = await newuser.save();
-    //generate jwd token
-    const createtoken = (id) => {
-      return jwt.sign({ id }, process.env.JWT_SECRET);
-    };
+   
     //send signup succcess
     const token = createtoken(user._id);
     res.json({ success: true, token });
