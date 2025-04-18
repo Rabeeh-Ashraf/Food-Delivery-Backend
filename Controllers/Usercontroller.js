@@ -4,7 +4,21 @@ import bcrypt from "bcrypt";
 import validator from "validator";
 
 //Login user
-const loginUser = async (req, res) => {};
+const loginUser = async (req, res) => {
+  const {email,password} =req.body
+  try {
+    const user = await userModel.findOne({email})
+    if(!user){
+      return res.json({success:false,message:"User does not exist"})
+    }
+    const isMatch = await bcrypt.compare(password,user.password)
+    if(!isMatch){
+     return res.json({success:false,message:"Invalid credentials"})
+    }
+  } catch (error) {
+    res.json({success:false,message:"error"})
+  }
+};
 
 //Register User
 const registerUser = async (req, res) => {
