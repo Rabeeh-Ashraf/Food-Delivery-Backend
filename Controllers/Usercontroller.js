@@ -34,7 +34,7 @@ const registerUser = async (req, res) => {
   try {
     //check if all fields are provided
     const exists = await userModel.findOne({ email });
-    if (!name || !email || !password) {
+    if (!email || !password) {
       return res.json({ success: false, message: "All fields are required" });
     }
     //check if user already exist
