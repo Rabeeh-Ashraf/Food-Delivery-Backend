@@ -1,4 +1,4 @@
-import { CurrencyCodes } from "validator/lib/isISO4217.js";
+
 import orderModel from "../Models/OrderModel.js";
 import userModel from "../Models/Usermodel.js"
 import Stripe from "stripe"
@@ -50,9 +50,31 @@ const placeOrder = async (req,res)=>{
 
 
             })
+        res.json({success:true,session_url:session.url })
         
      } catch (error) {
+        console.log(error.message);
+        res.json({success:false,message:"error"})
         
      }
 }
-export {placeOrder}
+
+const verifyOrder = async(req,res)=>{
+    const {orderId,success} = req.body
+    try {
+        if(success=="true"){
+            await orderModel.findByIdAndUpdate(orderId,{payment:true})
+            res.json({success:true,message:"paid"})
+        }else{
+            await orderModel.findByIdAndDelete(orderId)
+            console.log(error,"failed the payment method");
+            res.json({success:false,message:"Not Paid"})
+            
+        }
+    } catch (error) {
+        console.log(error.message);
+        res.json({success:false,message:"error in payment"})
+        
+    }
+}
+export {placeOrder,verifyOrder} 
