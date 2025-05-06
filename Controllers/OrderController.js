@@ -72,9 +72,18 @@ const verifyOrder = async(req,res)=>{
             
         }
     } catch (error) {
-        console.log(error.message);
         res.json({success:false,message:"error in payment"})
         
     }
 }
-export {placeOrder,verifyOrder} 
+//user order for frontend
+const userOrders = async(req,res)=>{
+     try {
+        const orders = await orderModel.find({userId:req.body.userId})
+        res.json({success:true,data:orders})
+     } catch (error) {
+        console.log(error)
+        res.json({success:false,message:"error in getting userOrders"})
+     }
+}
+export {placeOrder,verifyOrder,userOrders} 
